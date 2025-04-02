@@ -1,10 +1,15 @@
-from typing import Optional
+from typing import Optional, Type
 from langchain.tools import BaseTool
+from langchain.pydantic_v1 import BaseModel, Field
 import requests
 
+class WeatherInput(BaseModel):
+    location: str = Field(..., description="The city or location to get weather for")
+
 class WeatherTool(BaseTool):
-    name = "get_weather"
-    description = "Get current weather for a location"
+    name: str = "get_weather"
+    description: str = "Get current weather for a location"
+    args_schema: Type[BaseModel] = WeatherInput
 
     def _get_weather_condition(self, code: int) -> str:
         conditions = {
